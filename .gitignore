@@ -1,0 +1,5 @@
+# Exclude .md files except README.md
+design.md
+prd.md
+tech_stack.md
+walkthrough.md

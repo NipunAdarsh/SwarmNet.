@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="SwarmNet — Donate your NPU's idle compute to accelerate open-source scientific AI. Join the world's largest decentralized supercomputer for protein folding, climate modeling, and disease prediction.">
+  <title>SwarmNet — Decentralized NPU Training for Science</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+  <!-- ========== NAVIGATION ========== -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="#" class="nav-logo">
+        <span class="logo-dot"></span> SwarmNet
+      </a>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="#services">Technology</a></li>
+        <li><a href="#stats">Network</a></li>
+        <li><a href="#gamification">Community</a></li>
+        <li><a href="#hardware">Hardware</a></li>
+        <li><a href="#download" class="nav-cta ">Join the Swarm</a></li>
+      </ul>
+      <div class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ========== HERO ========== -->
+  <section class="hero" id="hero">
+    <div class="hero-bg-image"></div>
+    <div class="hero-gradient-overlay"></div>
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="badge-dot"></span>
+          Open Science Network
+        </div>
+        <h1>
+          Donate Your <span class="highlight">NPU.</span><br>
+          Accelerate <span class="gradient-text">Science.</span>
+        </h1>
+        <p>Your AI chip sits idle 95% of the time. SwarmNet harnesses millions of consumer NPUs into the world's largest
+          decentralized supercomputer — powering protein folding, climate modeling, and disease prediction
+          breakthroughs.</p>
+        <div class="hero-buttons">
+          <a href="#download" class="btn-primary">
+            <span></span> Join the Swarm
+          </a>
+          <a href="#how-it-works" class="btn-secondary">
+            <span>→</span> Learn More
+          </a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <canvas id="globe-canvas"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== HOW IT WORKS ========== -->
+  <section class="how-it-works section-padding" id="how-it-works">
+    <div class="container">
+      <div class="animate-on-scroll">
+        <div class="section-label">Process</div>
+        <h2 class="section-title">Three Steps to<br><span class="gradient-text">Power Discovery</span></h2>
+        <p class="section-subtitle">No PhD required. Install the client, set your preferences, and your NPU starts
+          contributing to real scientific research while you sleep.</p>
+      </div>
+      <div class="steps-grid stagger-children">
+        <div class="step-card animate-on-scroll">
+          <div class="step-number">01</div>
+          <h3>Install & Sign Up</h3>
+          <p>Download the lightweight SwarmNet client. Sign in with Google or GitHub. Choose the scientific cause you
+            care about — protein folding, climate modeling, or disease prediction.</p>
+        </div>
+        <div class="step-card animate-on-scroll">
+          <div class="step-number">02</div>
+          <h3>Configure Your Contribution</h3>
+          <p>Set when your NPU works — only while sleeping, always in background, or on-demand. Cap resource usage from
+            Light to Max. Your CPU and GPU stay free.</p>
+        </div>
+        <div class="step-card animate-on-scroll">
+          <div class="step-number">03</div>
+          <h3>Watch the Impact</h3>
+          <p>Your NPU pulls micro-batches, trains locally with LoRA, and sends gradients back. Earn Compute Points,
+            climb leaderboards, and see exactly what your machine solved.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SERVICES / TECHNOLOGY ========== -->
+  <section class="services section-padding" id="services">
+    <div class="container">
+      <div class="animate-on-scroll">
+        <div class="section-label">Core Technology</div>
+        <h2 class="section-title">Built on <span class="gradient-text">Cutting-Edge</span> Foundations</h2>
+        <p class="section-subtitle">Enterprise-grade distributed AI infrastructure, packaged into a tool that runs
+          quietly in your system tray.</p>
+      </div>
+      <div class="services-grid stagger-children">
+        <div class="service-card animate-on-scroll">
+          <h3>Federated Learning</h3>
+          <p>Your data never leaves your device. Models train locally, and only lightweight gradient updates are sent to
+            the network. Privacy-first, powered by the Flower framework.</p>
+          <span class="service-tag">flwr.dev</span>
+        </div>
+        <div class="service-card animate-on-scroll">
+          <h3>LoRA Fine-Tuning</h3>
+          <p>Low-Rank Adaptation freezes main model weights and trains tiny adapters. This slashes memory use from
+            gigabytes to megabytes — perfect for consumer NPU hardware.</p>
+          <span class="service-tag">PEFT / INT8</span>
+        </div>
+        <div class="service-card animate-on-scroll">
+          <h3>Direct NPU Targeting</h3>
+          <p>ONNX Runtime execution providers route workloads specifically to your Neural Processing Unit — CoreML,
+            DirectML, or QNN. Your CPU and GPU remain completely untouched.</p>
+          <span class="service-tag">ONNX Runtime</span>
+        </div>
+        <div class="service-card animate-on-scroll">
+          <h3>Sandboxed & Secure</h3>
+          <p>All model weights and training data run inside a strict sandbox. Built with Rust for memory safety. Zero
+            access to your personal files, zero risk of data leakage.</p>
+          <span class="service-tag">Rust / Tauri</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== LIVE STATS ========== -->
+  <section class="stats-bar" id="stats">
+    <div class="container">
+      <div class="stats-grid stagger-children">
+        <div class="stat-item animate-on-scroll">
+          <div class="stat-number"><span class="counter accent" data-target="2847">0</span><span class="accent">+</span>
+          </div>
+          <div class="stat-label">Tera Ops / Second</div>
+        </div>
+        <div class="stat-item animate-on-scroll">
+          <div class="stat-number"><span class="counter" data-target="14290">0</span></div>
+          <div class="stat-label">Active Nodes</div>
+        </div>
+        <div class="stat-item animate-on-scroll">
+          <div class="stat-number"><span class="counter accent" data-target="37">0</span></div>
+          <div class="stat-label">Models Fine-Tuned</div>
+        </div>
+        <div class="stat-item animate-on-scroll">
+          <div class="stat-number"><span class="counter" data-target="128">0</span><span>B</span></div>
+          <div class="stat-label">Parameters Crunched</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== GAMIFICATION ========== -->
+  <section class="gamification section-padding" id="gamification">
+    <div class="container">
+      <div class="animate-on-scroll">
+        <div class="section-label">Community</div>
+        <h2 class="section-title">Compete. Contribute.<br><span class="gradient-text">Earn Recognition.</span></h2>
+        <p class="section-subtitle">Form teams, climb global leaderboards, and collect milestone badges as your NPU
+          contributes to scientific breakthroughs.</p>
+      </div>
+      <div class="gamification-grid">
+        <!-- Leaderboard -->
+        <div class="leaderboard animate-on-scroll">
+          <div class="leaderboard-header">
+            <h3>🏆 Global Leaderboard</h3>
+            <span class="live-badge">Live</span>
+          </div>
+          <div class="leaderboard-row">
+            <span class="lb-rank top">#1</span>
+            <span class="lb-name">QuantumFox <span class="team">· PCMR Guild</span></span>
+            <span class="lb-score">847,293 CP</span>
+          </div>
+          <div class="leaderboard-row">
+            <span class="lb-rank top">#2</span>
+            <span class="lb-name">NeuralNinja <span class="team">· MIT Alumni</span></span>
+            <span class="lb-score">721,450 CP</span>
+          </div>
+          <div class="leaderboard-row">
+            <span class="lb-rank top">#3</span>
+            <span class="lb-name">ScienceSarah <span class="team">· BioHackers</span></span>
+            <span class="lb-score">698,102 CP</span>
+          </div>
+          <div class="leaderboard-row">
+            <span class="lb-rank">#4</span>
+            <span class="lb-name">CrunchMaster <span class="team">· r/Science</span></span>
+            <span class="lb-score">654,881 CP</span>
+          </div>
+          <div class="leaderboard-row">
+            <span class="lb-rank">#5</span>
+            <span class="lb-name">ProteinPete <span class="team">· Stanford Lab</span></span>
+            <span class="lb-score">612,340 CP</span>
+          </div>
+        </div>
+
+        <!-- Badges -->
+        <div class="badges-section animate-on-scroll">
+          <h3> Milestone Badges </h3>
+          <p>Unlock exclusive digital badges as you contribute. Show the world what your NPU has accomplished for
+            science.</p>
+          <div class="badges-grid">
+            <div class="badge-card">
+              <div class="badge-emoji">🧬</div>
+              <h4>Protein Pioneer</h4>
+              <p>1M protein sequences</p>
+            </div>
+            <div class="badge-card">
+              <div class="badge-emoji">🌍</div>
+              <h4>Climate Guardian</h4>
+              <p>500K climate data points</p>
+            </div>
+            <div class="badge-card">
+              <div class="badge-emoji">💎</div>
+              <h4>Billion Cruncher</h4>
+              <p>1B parameters processed</p>
+            </div>
+            <div class="badge-card">
+              <div class="badge-emoji">⚡</div>
+              <h4>Swarm Veteran</h4>
+              <p>365 days active</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SUPPORTED HARDWARE ========== -->
+  <section class="hardware section-padding" id="hardware">
+    <div class="container">
+      <div class="animate-on-scroll">
+        <div class="section-label">Compatibility</div>
+        <h2 class="section-title">Your NPU Is <span class="gradient-text">Already Supported</span></h2>
+        <p class="section-subtitle">SwarmNet works with every major NPU architecture shipping in modern AI PCs and
+          smartphones.</p>
+      </div>
+      <div class="hardware-grid stagger-children">
+        <div class="hardware-card animate-on-scroll">
+          <div class="hardware-icon">🔵</div>
+          <h3>Intel Core Ultra</h3>
+          <p>OpenVINO / DirectML</p>
+        </div>
+        <div class="hardware-card animate-on-scroll">
+          <div class="hardware-icon">🔴</div>
+          <h3>AMD Ryzen AI</h3>
+          <p>XDNA / DirectML</p>
+        </div>
+        <div class="hardware-card animate-on-scroll">
+          <div class="hardware-icon">🟡</div>
+          <h3>Qualcomm Snapdragon</h3>
+          <p>Hexagon / QNN</p>
+        </div>
+        <div class="hardware-card animate-on-scroll">
+          <div class="hardware-icon">⚪</div>
+          <h3>Apple Silicon</h3>
+          <p>Neural Engine / CoreML</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== DOWNLOAD CTA ========== -->
+  <section class="download-cta section-padding" id="download">
+    <div class="container">
+      <div class="animate-on-scroll">
+        <div class="section-label" style="justify-content: center;">Join the Network</div>
+        <h2 class="section-title">Ready to <span class="gradient-text">Power Science?</span></h2>
+        <p class="section-subtitle">Download SwarmNet, donate your NPU's idle time, and become part of the world's
+          largest decentralized AI supercomputer.</p>
+      </div>
+      <div class="download-buttons animate-on-scroll">
+        <button class="os-btn">
+          <span class="os-icon">🪟</span>
+          <span class="os-label">Windows<small>Intel / AMD / Qualcomm</small></span>
+        </button>
+        <button class="os-btn">
+          <span class="os-icon">🍎</span>
+          <span class="os-label">macOS<small>Apple Silicon</small></span>
+        </button>
+        <button class="os-btn">
+          <span class="os-icon">🐧</span>
+          <span class="os-label">Linux<small>x86_64 / ARM</small></span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#" class="nav-logo">
+            <span class="logo-dot"></span> SwarmNet
+          </a>
+          <p>Democratizing AI training for open science. One idle NPU at a time.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <a href="#how-it-works">How It Works</a>
+          <a href="#services">Technology</a>
+          <a href="#hardware">Supported Hardware</a>
+          <a href="#download">Download</a>
+        </div>
+        <div class="footer-col">
+          <h4>Community</h4>
+          <a href="#gamification">Leaderboards</a>
+          <a href="#">Teams & Guilds</a>
+          <a href="#">Badges</a>
+          <a href="#">Discord</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="#">Documentation</a>
+          <a href="#">API Reference</a>
+          <a href="#">GitHub</a>
+          <a href="#">Blog</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 SwarmNet. Open Science, Open Source.</p>
+        <div class="footer-socials">
+          <a href="#" aria-label="GitHub">⬡</a>
+          <a href="#" aria-label="Discord">◈</a>
+          <a href="#" aria-label="Twitter">✦</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="js/globe.js"></script>
+  <script src="js/main.js"></script>
+</body>
+
+</html>
