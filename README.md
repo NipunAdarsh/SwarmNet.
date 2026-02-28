@@ -110,4 +110,4 @@ Simply double-click `index.html` to open it in your default browser.
 
 ## License
 
-Open Source — Built for open science. 🧬🌍
+Open Source — Built for open science.
