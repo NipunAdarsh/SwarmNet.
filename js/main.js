@@ -28,8 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Close mobile menu on link click
-  navLinks.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
+  navLinks.querySelectorAll('a').forEach(navLink => {
+    navLink.addEventListener('click', () => {
       hamburger.classList.remove('active');
       navLinks.classList.remove('active');
     });
@@ -50,36 +50,36 @@ document.addEventListener('DOMContentLoaded', () => {
     { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }
   );
 
-  animatedElements.forEach(el => scrollObserver.observe(el));
+  animatedElements.forEach(animatedElement => scrollObserver.observe(animatedElement));
 
   // ── Animated counters ──
-  const counters = document.querySelectorAll('.counter');
-  let countersAnimated = false;
+  const counterElements = document.querySelectorAll('.counter');
+  let haveCountersAnimated = false;
 
   const animateCounters = () => {
-    if (countersAnimated) return;
-    countersAnimated = true;
+    if (haveCountersAnimated) return;
+    haveCountersAnimated = true;
 
-    counters.forEach(counter => {
-      const target = parseInt(counter.getAttribute('data-target'));
-      const duration = 2000; // ms
-      const stepTime = 16;
-      const totalSteps = Math.floor(duration / stepTime);
-      let currentStep = 0;
+    counterElements.forEach(counterElement => {
+      const targetValue = parseInt(counterElement.getAttribute('data-target'));
+      const animationDurationMs = 2000; // ms
+      const frameIntervalMs = 16;
+      const totalAnimationSteps = Math.floor(animationDurationMs / frameIntervalMs);
+      let currentAnimationStep = 0;
 
       const easeOutQuart = (t) => 1 - Math.pow(1 - t, 4);
 
       const updateCounter = () => {
-        currentStep++;
-        const progress = easeOutQuart(currentStep / totalSteps);
-        const current = Math.floor(target * progress);
+        currentAnimationStep++;
+        const progress = easeOutQuart(currentAnimationStep / totalAnimationSteps);
+        const currentDisplayValue = Math.floor(targetValue * progress);
 
-        counter.textContent = current.toLocaleString();
+        counterElement.textContent = currentDisplayValue.toLocaleString();
 
-        if (currentStep < totalSteps) {
+        if (currentAnimationStep < totalAnimationSteps) {
           requestAnimationFrame(updateCounter);
         } else {
-          counter.textContent = target.toLocaleString();
+          counterElement.textContent = targetValue.toLocaleString();
         }
       };
 
@@ -105,16 +105,16 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ── Smooth scroll for anchor links ──
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-      const targetId = this.getAttribute('href');
-      if (targetId === '#') return;
+  document.querySelectorAll('a[href^="#"]').forEach(anchorLink => {
+    anchorLink.addEventListener('click', function (e) {
+      const targetSectionId = this.getAttribute('href');
+      if (targetSectionId === '#') return;
 
       e.preventDefault();
-      const target = document.querySelector(targetId);
-      if (target) {
+      const targetElement = document.querySelector(targetSectionId);
+      if (targetElement) {
         const navHeight = navbar.offsetHeight;
-        const targetPosition = target.getBoundingClientRect().top + window.scrollY - navHeight;
+        const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - navHeight;
         window.scrollTo({ top: targetPosition, behavior: 'smooth' });
       }
     });
@@ -126,10 +126,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (heroBg) {
     window.addEventListener('scroll', () => {
-      const scrolled = window.scrollY;
-      if (scrolled < window.innerHeight) {
-        heroBg.style.transform = `translateY(${scrolled * 0.3}px) scale(1.1)`;
-        heroGradient.style.transform = `translateY(${scrolled * 0.15}px)`;
+      const parallaxScrollDistance = window.scrollY;
+      if (parallaxScrollDistance < window.innerHeight) {
+        heroBg.style.transform = `translateY(${parallaxScrollDistance * 0.3}px) scale(1.1)`;
+        heroGradient.style.transform = `translateY(${parallaxScrollDistance * 0.15}px)`;
       }
     }, { passive: true });
   }
