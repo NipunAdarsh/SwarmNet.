@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="SwarmNet NPU vs CPU Benchmark Race — Upload an image and watch both processors race to classify it.">
+    <title>NPU vs CPU Benchmark — SwarmNet</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <!-- ========== NAVIGATION ========== -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="container">
+            <a href="/" class="nav-logo">
+                <span class="logo-dot"></span> SwarmNet
+            </a>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="/#how-it-works">How It Works</a></li>
+                <li><a href="/#services">Technology</a></li>
+                <li><a href="/classify">Live Demo</a></li>
+                <li><a href="/webcam">Webcam</a></li>
+                <li><a href="/training">NPU Training</a></li>
+                <li><a href="/benchmark" class="active">Benchmark</a></li>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/#download" class="nav-cta">Join the Swarm</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ========== BENCHMARK RACE ========== -->
+    <section class="benchmark-section section-padding" id="benchmark" style="padding-top: 120px;">
+        <div class="container">
+            <div class="animate-on-scroll">
+                <div class="section-label">Performance</div>
+                <h2 class="section-title">NPU vs CPU <span class="gradient-text">Speed Race</span></h2>
+                <p class="section-subtitle">Upload an image and watch both processors race to classify it. See exactly
+                    how much
+                    faster the NPU is.</p>
+            </div>
+
+            <div class="bench-container animate-on-scroll">
+                <div class="bench-grid">
+                    <!-- Left: Upload -->
+                    <div class="bench-upload-panel">
+                        <div class="demo-upload-zone" id="bench-upload-zone">
+                            <div class="upload-icon">🏎️</div>
+                            <h3>Drop Image to Race</h3>
+                            <p>or click to browse</p>
+                            <p class="upload-formats">PNG, JPEG, BMP, WebP</p>
+                            <input type="file" id="bench-file-input" accept="image/png,image/jpeg,image/bmp,image/webp"
+                                hidden>
+                        </div>
+                        <div class="demo-preview" id="bench-preview-area" style="display:none;">
+                            <img id="bench-preview-img" alt="Preview">
+                            <button class="demo-clear-btn" id="bench-clear">✕ Clear</button>
+                        </div>
+                        <button class="btn-primary demo-run-btn" id="bench-run" disabled>
+                            <span>⚡</span> Run Race
+                        </button>
+                    </div>
+
+                    <!-- Right: Race Results -->
+                    <div class="bench-results-panel" id="bench-results" style="display:none;">
+                        <!-- NPU Lane -->
+                        <div class="bench-lane">
+                            <div class="bench-lane-header">
+                                <span class="bench-lane-icon npu">⚡</span>
+                                <span class="bench-lane-title">NPU</span>
+                                <span class="bench-lane-provider" id="bench-npu-provider">—</span>
+                            </div>
+                            <div class="bench-bar-track">
+                                <div class="bench-bar" id="bench-npu-bar"></div>
+                            </div>
+                            <div class="bench-lane-stats">
+                                <span class="bench-time" id="bench-npu-time">—</span>
+                                <span class="bench-label-result" id="bench-npu-label">—</span>
+                            </div>
+                        </div>
+
+                        <!-- CPU Lane -->
+                        <div class="bench-lane">
+                            <div class="bench-lane-header">
+                                <span class="bench-lane-icon cpu">💻</span>
+                                <span class="bench-lane-title">CPU</span>
+                                <span class="bench-lane-provider" id="bench-cpu-provider">—</span>
+                            </div>
+                            <div class="bench-bar-track">
+                                <div class="bench-bar" id="bench-cpu-bar"></div>
+                            </div>
+                            <div class="bench-lane-stats">
+                                <span class="bench-time" id="bench-cpu-time">—</span>
+                                <span class="bench-label-result" id="bench-cpu-label">—</span>
+                            </div>
+                        </div>
+
+                        <!-- Speedup -->
+                        <div class="bench-speedup">
+                            <span class="bench-speedup-label">NPU Speedup</span>
+                            <span class="bench-speedup-value" id="bench-speedup">—</span>
+                        </div>
+
+                        <!-- History -->
+                        <div class="bench-history" id="bench-history"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== CONTROLLED BENCHMARK ========== -->
+    <section class="benchmark-section section-padding" id="controlled-benchmark">
+        <div class="container">
+            <div class="animate-on-scroll">
+                <div class="section-label">Scientific</div>
+                <h2 class="section-title">Controlled <span class="gradient-text">Benchmark</span></h2>
+                <p class="section-subtitle">Deterministic input, warmup passes, repeated runs with median/p95 latency
+                    stats. Results saved as JSON for reproducibility.</p>
+            </div>
+
+            <div class="bench-container animate-on-scroll">
+                <div class="controlled-bench-config">
+                    <label for="ctrl-runs">Number of runs:</label>
+                    <select id="ctrl-runs">
+                        <option value="2">2 runs (quick)</option>
+                        <option value="5" selected>5 runs (default)</option>
+                        <option value="10">10 runs (thorough)</option>
+                        <option value="20">20 runs (exhaustive)</option>
+                    </select>
+                    <button class="btn-primary" id="ctrl-bench-run">
+                        <span>🔬</span> Run Controlled Benchmark
+                    </button>
+                </div>
+
+                <div id="ctrl-bench-loading" style="display:none; text-align:center; padding:2rem;">
+                    <div class="spinner"></div>
+                    <p style="color:var(--text-muted); margin-top:1rem;" id="ctrl-loading-msg">Running benchmark...</p>
+                </div>
+
+                <div id="ctrl-bench-results" style="display:none;">
+                    <table class="ctrl-results-table">
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>NPU</th>
+                                <th>CPU</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ctrl-results-body"></tbody>
+                    </table>
+                    <div class="bench-speedup" style="margin-top:1rem;">
+                        <span class="bench-speedup-label">Median Speedup</span>
+                        <span class="bench-speedup-value" id="ctrl-speedup">—</span>
+                    </div>
+                    <div class="ctrl-reproduce" id="ctrl-reproduce" style="display:none;">
+                        <h4>Reproduce</h4>
+                        <code id="ctrl-reproduce-cmd"></code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="/" class="nav-logo">
+                        <span class="logo-dot"></span> SwarmNet
+                    </a>
+                    <p>Democratizing AI training for open science. One idle NPU at a time.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Platform</h4>
+                    <a href="/#how-it-works">How It Works</a>
+                    <a href="/#services">Technology</a>
+                    <a href="/classify">Live Demo</a>
+                    <a href="/#hardware">Supported Hardware</a>
+                    <a href="/#download">Download</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Features</h4>
+                    <a href="/classify">Image Classification</a>
+                    <a href="/webcam">Live Webcam</a>
+                    <a href="/training">NPU Training</a>
+                    <a href="/benchmark">Benchmark Race</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Resources</h4>
+                    <a href="#">Documentation</a>
+                    <a href="#">API Reference</a>
+                    <a href="#">GitHub</a>
+                    <a href="#">Blog</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 SwarmNet. Open Science, Open Source.</p>
+                <div class="footer-socials">
+                    <a href="#" aria-label="GitHub">⬡</a>
+                    <a href="#" aria-label="Discord">◈</a>
+                    <a href="#" aria-label="Twitter">✦</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/benchmark.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>SwarmNet Mission Control Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00c7b0",
+                        "secondary": "#7B2FBE",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#080B12",
+                        "surface": "#0D1220",
+                        "border-muted": "#1A2332"
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        .glow-cyan {
+            box-shadow: 0 0 15px rgba(0, 199, 176, 0.3);
+        }
+
+        .glow-purple {
+            box-shadow: 0 0 15px rgba(123, 47, 190, 0.3);
+        }
+
+        .bg-mesh {
+            background-image: radial-gradient(circle at 2px 2px, #1A2332 1px, transparent 0);
+            background-size: 40px 40px;
+        }
+
+        .digital-number {
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -0.05em;
+        }
+    </style>
+</head>
+
+<body class="bg-background-dark font-display text-slate-100 min-h-screen selection:bg-primary/30">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 w-full border-b border-border-muted bg-background-dark/80 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="flex gap-1" style="flex-direction: column; align-items: center; justify-content: center;">
+                    <span
+                        class="material-symbols-outlined text-4xl text-primary font-bold shadow-[0_0_8px_#00c7b0]">hub</span>
+                </div>
+                <h2 class="text-2xl font-bold tracking-tighter text-slate-100 uppercase mt-1">SWARM</h2>
+            </div>
+            <nav id="nav-links" class="hidden md:flex items-center gap-10">
+                <a class="text-sm font-medium hover:text-primary transition-colors" href="index.html">HOW IT WORKS</a>
+                <a class="text-sm font-medium hover:text-primary transition-colors" href="demos.html">SCIENCE &
+                    DEMOS</a>
+                <a class="text-sm font-medium hover:text-primary transition-colors"
+                    href="dashboard.html">LEADERBOARD</a>
+                <a class="text-sm font-medium hover:text-primary transition-colors" href="training.html">LIVE
+                    TRAINING</a>
+            </nav>
+            <div class="flex items-center gap-4">
+                <button
+                    class="px-6 py-2 text-sm font-bold border border-border-muted hover:border-primary/50 rounded-full transition-all">SIGN
+                    IN</button>
+                <button
+                    class="px-6 py-2 text-sm font-bold bg-primary text-background-dark rounded-full hover:scale-105 transition-transform glow-cyan">DONATE
+                    COMPUTE</button>
+            </div>
+        </div>
+    </header>
+    <main class="max-w-7xl mx-auto px-6 py-12 space-y-10 bg-mesh">
+        <!-- Welcome Section -->
+        <div class="flex flex-col md:flex-row justify-between items-end gap-6">
+            <div class="space-y-2">
+                <div class="flex items-center gap-2 text-primary">
+                    <span class="relative flex h-3 w-3">
+                        <span
+                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+                    </span>
+                    <span class="text-xs font-bold tracking-widest uppercase font-mono">Mission Active</span>
+                </div>
+                <h2 class="text-5xl font-black tracking-tight">MISSION CONTROL</h2>
+                <p class="text-slate-400 max-w-lg">Welcome back, <span class="text-primary font-mono">NODE_7741</span>.
+                    Your NPU is currently processing neural weights for Project Chimera.</p>
+            </div>
+            <div class="flex flex-wrap gap-4">
+                <div class="bg-surface border border-border-muted p-4 rounded-xl flex items-center gap-4 min-w-[150px]">
+                    <div class="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                        <span class="material-symbols-outlined">hub</span>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-500 font-bold uppercase">Active Nodes</p>
+                        <p class="text-xl font-mono font-bold" id="summary-active">142,892</p>
+                    </div>
+                </div>
+                <div class="bg-surface border border-border-muted p-4 rounded-xl flex items-center gap-4 min-w-[150px]">
+                    <div class="size-10 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary">
+                        <span class="material-symbols-outlined">bolt</span>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-500 font-bold uppercase">Total Inferences</p>
+                        <p class="text-xl font-mono font-bold" id="summary-throughput">8.4M</p>
+                    </div>
+                </div>
+                <div class="bg-surface border border-border-muted p-4 rounded-xl flex items-center gap-4 min-w-[150px]">
+                    <div class="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                        <span class="material-symbols-outlined">speed</span>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-500 font-bold uppercase">Avg Latency</p>
+                        <p class="text-xl font-mono font-bold" id="summary-latency">14ms</p>
+                    </div>
+                </div>
+                <div class="bg-surface border border-border-muted p-4 rounded-xl flex items-center gap-4 min-w-[150px]">
+                    <div class="size-10 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary">
+                        <span class="material-symbols-outlined">memory</span>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-500 font-bold uppercase">NPU Nodes</p>
+                        <p class="text-xl font-mono font-bold" id="summary-npu-nodes">9,840</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Dashboard Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- User Stats Card -->
+            <div class="lg:col-span-2 space-y-6">
+                <div class="bg-surface border border-border-muted rounded-xl p-8 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <span class="material-symbols-outlined text-9xl">analytics</span>
+                    </div>
+                    <div class="relative z-10 flex flex-col h-full justify-between gap-8">
+                        <div>
+                            <p class="text-primary text-sm font-bold tracking-[0.2em] mb-4">PERSONAL DATAFEED</p>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                                <div class="space-y-1">
+                                    <p class="text-slate-500 text-xs font-bold uppercase">Rank</p>
+                                    <p class="text-3xl font-mono font-bold tracking-tighter">#1,248</p>
+                                    <p class="text-primary text-xs font-bold">+12 pos</p>
+                                </div>
+                                <div class="space-y-1">
+                                    <p class="text-slate-500 text-xs font-bold uppercase">Compute</p>
+                                    <p class="text-3xl font-mono font-bold tracking-tighter text-primary">45.2 <span
+                                            class="text-sm">TF</span></p>
+                                    <p class="text-slate-400 text-xs font-bold">Lifetime</p>
+                                </div>
+                                <div class="space-y-1">
+                                    <p class="text-slate-500 text-xs font-bold uppercase">Points</p>
+                                    <p class="text-3xl font-mono font-bold tracking-tighter">12.8K</p>
+                                    <p class="text-secondary text-xs font-bold">+850 today</p>
+                                </div>
+                                <div class="space-y-1">
+                                    <p class="text-slate-500 text-xs font-bold uppercase">Uptime</p>
+                                    <p class="text-3xl font-mono font-bold tracking-tighter">99.8%</p>
+                                    <p class="text-emerald-400 text-xs font-bold">Stable</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Sparkline Chart -->
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <p class="text-sm font-bold text-slate-400 uppercase">Weekly Compute Performance</p>
+                                <span
+                                    class="px-2 py-1 rounded bg-primary/10 text-primary text-[10px] font-mono font-bold tracking-wider">LIVE
+                                    FEED</span>
+                            </div>
+                            <div class="h-32 w-full relative">
+                                <svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 1000 100">
+                                    <defs>
+                                        <lineargradient id="cyanGradient" x1="0" x2="0" y1="0" y2="1">
+                                            <stop offset="0%" stop-color="#00c7b0" stop-opacity="0.3"></stop>
+                                            <stop offset="100%" stop-color="#00c7b0" stop-opacity="0"></stop>
+                                        </lineargradient>
+                                    </defs>
+                                    <path
+                                        d="M0,80 Q50,70 100,85 T200,60 T300,75 T400,40 T500,55 T600,30 T700,45 T800,20 T900,35 T1000,15 L1000,100 L0,100 Z"
+                                        fill="url(#cyanGradient)"></path>
+                                    <path
+                                        d="M0,80 Q50,70 100,85 T200,60 T300,75 T400,40 T500,55 T600,30 T700,45 T800,20 T900,35 T1000,15"
+                                        fill="none" stroke="#00c7b0" stroke-linecap="round" stroke-width="3"></path>
+                                </svg>
+                                <div
+                                    class="flex justify-between mt-2 text-[10px] font-mono text-slate-500 uppercase tracking-widest">
+                                    <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Swarm Topology (Restored from Original) -->
+            <div class="lg:col-span-1">
+                <div
+                    class="bg-surface border border-border-muted rounded-xl p-8 h-full flex flex-col relative group overflow-hidden">
+                    <div class="flex justify-between items-center mb-6 relative z-10">
+                        <h3 class="text-sm font-bold uppercase tracking-widest text-primary">Swarm Topology</h3>
+                    </div>
+                    <div
+                        class="flex-1 bg-background-dark/80 rounded-lg border border-border-muted relative overflow-hidden flex items-center justify-center min-h-[300px]">
+                        <div class="absolute inset-0 opacity-20 pointer-events-none"
+                            style="background-image: radial-gradient(circle at 2px 2px, #1A2332 1px, transparent 0); background-size: 24px 24px;">
+                        </div>
+                        <!-- Topology Canvas injected here -->
+                        <canvas id="topology-canvas"
+                            style="position:absolute; width:100%; height:100%; top:0; left:0; z-index:20;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Middle Tier: Node Grid & Efficiency -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Edge Node Matrix (Restored) -->
+            <div class="bg-surface border border-border-muted rounded-xl p-8 flex flex-col h-full">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-sm font-bold uppercase tracking-widest text-secondary text-primary">Edge Node Matrix
+                    </h3>
+                    <div class="flex gap-2">
+                        <button id="btn-kill-random"
+                            class="border border-border-muted hover:border-secondary p-2 rounded transition-colors text-white"
+                            title="Kill Random Node">
+                            <span class="material-symbols-outlined text-sm">skull</span>
+                        </button>
+                        <button id="btn-revive-all"
+                            class="bg-primary/20 text-primary hover:bg-primary/40 focus:ring-2 focus:ring-primary p-2 rounded transition-colors"
+                            title="Revive All">
+                            <span class="material-symbols-outlined text-sm">restart_alt</span>
+                        </button>
+                    </div>
+                </div>
+                <div id="node-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pb-4 pt-2">
+                    <!-- Dashboard.js generates elements here -->
+                </div>
+            </div>
+
+            <!-- Performance Metrics & Efficiency (Restored) -->
+            <div class="bg-surface border border-border-muted rounded-xl p-8 flex flex-col h-full">
+                <h3 class="text-sm font-bold uppercase tracking-widest text-primary mb-6">Device Performance Profile
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="space-y-4">
+                        <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-widest">Energy Efficiency
+                        </p>
+                        <div class="space-y-3">
+                            <div class="space-y-1">
+                                <div class="flex justify-between text-xs mb-1"><span>CPU</span><span
+                                        id="energy-cpu-val">42%</span></div>
+                                <div class="w-full h-2 bg-background-dark rounded-full overflow-hidden">
+                                    <div id="energy-cpu" class="h-full bg-slate-500" style="width: 42%"></div>
+                                </div>
+                            </div>
+                            <div class="space-y-1">
+                                <div class="flex justify-between text-xs mb-1"><span>GPU</span><span
+                                        id="energy-gpu-val">68%</span></div>
+                                <div class="w-full h-2 bg-background-dark rounded-full overflow-hidden">
+                                    <div id="energy-gpu" class="h-full bg-slate-400" style="width: 68%"></div>
+                                </div>
+                            </div>
+                            <div class="space-y-1">
+                                <div class="flex justify-between text-xs mb-1 font-bold text-primary">
+                                    <span>NPU</span><span id="energy-npu-val">94%</span>
+                                </div>
+                                <div
+                                    class="w-full h-2 bg-background-dark rounded-full overflow-hidden border border-primary/30">
+                                    <div id="energy-npu" class="h-full bg-primary glow-cyan" style="width: 94%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-4">
+                        <p class="text-[10px] font-semibold text-slate-500 uppercase tracking-widest">Cloud vs Edge</p>
+                        <div class="flex items-end justify-around h-32 gap-4 pb-2 border-b border-border-muted">
+                            <div class="flex flex-col items-center gap-2 w-full">
+                                <div id="cloud-lat-bar" class="w-full bg-slate-800 rounded-t" style="height: 80%"></div>
+                                <span class="text-[10px] uppercase text-slate-400">Cloud</span><span id="cloud-lat-val"
+                                    class="text-xs font-mono"></span>
+                            </div>
+                            <div class="flex flex-col items-center gap-2 w-full">
+                                <div id="edge-lat-bar" class="w-full bg-primary rounded-t glow-cyan"
+                                    style="height: 25%"></div>
+                                <span class="text-[10px] uppercase text-primary font-bold">Edge</span><span
+                                    id="edge-lat-val" class="text-xs text-primary font-mono"></span>
+                            </div>
+                        </div>
+                        <p class="text-[10px] text-center text-secondary uppercase tracking-tighter">Latency reduction:
+                            3.2x</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Achievements & Leaderboard -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Achievements -->
+            <div class="lg:col-span-5 bg-surface border border-border-muted rounded-xl p-8">
+                <h3 class="text-lg font-bold tracking-tight mb-8 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-secondary">verified_user</span>
+                    ACHIEVEMENTS
+                </h3>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+                    <!-- Hex Badge Unlocked -->
+                    <div class="group flex flex-col items-center gap-3 text-center">
+                        <div class="relative size-16 flex items-center justify-center">
+                            <div
+                                class="absolute inset-0 bg-primary/20 clip-hex rotate-90 scale-110 blur-sm group-hover:blur-md transition-all">
+                            </div>
+                            <div
+                                class="relative bg-background-dark border border-primary text-primary size-14 flex items-center justify-center [clip-path:polygon(50%_0%,100%_25%,100%_75%,50%_100%,0%_75%,0%_25%)]">
+                                <span class="material-symbols-outlined">settings_input_component</span>
+                            </div>
+                        </div>
+                        <span class="text-[10px] font-bold text-slate-300 uppercase tracking-tighter">First Node</span>
+                    </div>
+                    <!-- Hex Badge Unlocked -->
+                    <div class="group flex flex-col items-center gap-3 text-center">
+                        <div class="relative size-16 flex items-center justify-center">
+                            <div
+                                class="absolute inset-0 bg-secondary/20 clip-hex rotate-90 scale-110 blur-sm group-hover:blur-md transition-all">
+                            </div>
+                            <div
+                                class="relative bg-background-dark border border-secondary text-secondary size-14 flex items-center justify-center [clip-path:polygon(50%_0%,100%_25%,100%_75%,50%_100%,0%_75%,0%_25%)]">
+                                <span class="material-symbols-outlined">workspace_premium</span>
+                            </div>
+                        </div>
+                        <span class="text-[10px] font-bold text-slate-300 uppercase tracking-tighter">Petaflop
+                            Club</span>
+                    </div>
+                    <!-- Hex Badge Locked -->
+                    <div class="group flex flex-col items-center gap-3 text-center opacity-40 grayscale">
+                        <div class="relative size-16 flex items-center justify-center">
+                            <div
+                                class="relative bg-background-dark border border-slate-700 text-slate-500 size-14 flex items-center justify-center [clip-path:polygon(50%_0%,100%_25%,100%_75%,50%_100%,0%_75%,0%_25%)]">
+                                <span class="material-symbols-outlined">lock</span>
+                            </div>
+                        </div>
+                        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Exascale</span>
+                    </div>
+                    <!-- Hex Badge Unlocked -->
+                    <div class="group flex flex-col items-center gap-3 text-center">
+                        <div class="relative size-16 flex items-center justify-center">
+                            <div
+                                class="absolute inset-0 bg-primary/20 clip-hex rotate-90 scale-110 blur-sm group-hover:blur-md transition-all">
+                            </div>
+                            <div
+                                class="relative bg-background-dark border border-primary text-primary size-14 flex items-center justify-center [clip-path:polygon(50%_0%,100%_25%,100%_75%,50%_100%,0%_75%,0%_25%)]">
+                                <span class="material-symbols-outlined">electric_bolt</span>
+                            </div>
+                        </div>
+                        <span class="text-[10px] font-bold text-slate-300 uppercase tracking-tighter">Power User</span>
+                    </div>
+                    <!-- Hex Badge Locked -->
+                    <div class="group flex flex-col items-center gap-3 text-center opacity-40 grayscale">
+                        <div class="relative size-16 flex items-center justify-center">
+                            <div
+                                class="relative bg-background-dark border border-slate-700 text-slate-500 size-14 flex items-center justify-center [clip-path:polygon(50%_0%,100%_25%,100%_75%,50%_100%,0%_75%,0%_25%)]">
+                                <span class="material-symbols-outlined">military_tech</span>
+                            </div>
+                        </div>
+                        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-tighter">Grand
+                            Master</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leaderboard Section -->
+            <div class="lg:col-span-7 bg-surface border border-border-muted rounded-xl overflow-hidden flex flex-col">
+                <div class="p-6 border-b border-border-muted flex items-center justify-between">
+                    <h3 class="text-sm font-bold uppercase tracking-widest flex items-center gap-2">
+                        <span class="material-symbols-outlined text-amber-400">workspace_premium</span>
+                        Top Contributors
+                    </h3>
+                    <span class="text-slate-500 font-mono text-[10px]">7D INTERVAL</span>
+                </div>
+                <div class="flex-1 overflow-y-auto max-h-[350px]">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr
+                                class="text-[10px] uppercase font-bold text-slate-500 border-b border-border-muted sticky top-0 bg-surface">
+                                <th class="p-4">Rank</th>
+                                <th class="p-4">Node ID</th>
+                                <th class="p-4 text-right">TFLOPS</th>
+                            </tr>
+                        </thead>
+                        <tbody class="font-mono text-sm">
+                            <!-- Rank #1 -->
+                            <tr class="bg-primary/5 border-l-2 border-primary">
+                                <td class="p-4">
+                                    <span
+                                        class="bg-primary text-background-dark text-[10px] font-black px-2 py-0.5 rounded">01</span>
+                                </td>
+                                <td class="p-4 flex items-center gap-2">
+                                    <span>ALPHA_9</span>
+                                    <span class="material-symbols-outlined text-[12px] text-primary">verified</span>
+                                </td>
+                                <td class="p-4 text-right text-primary font-bold">4.2M</td>
+                            </tr>
+                            <tr class="border-b border-border-muted/50 hover:bg-border-muted/20 transition-colors">
+                                <td class="p-4 text-slate-400">02</td>
+                                <td class="p-4 text-slate-300">CORE_MINER</td>
+                                <td class="p-4 text-right text-slate-100 font-bold">3.8M</td>
+                            </tr>
+                            <tr class="border-b border-border-muted/50 hover:bg-border-muted/20 transition-colors">
+                                <td class="p-4 text-slate-400">03</td>
+                                <td class="p-4 text-slate-300">VOID_RUNNER</td>
+                                <td class="p-4 text-right text-slate-100 font-bold">3.5M</td>
+                            </tr>
+                            <tr class="border-b border-border-muted/50 hover:bg-border-muted/20 transition-colors">
+                                <td class="p-4 text-slate-400">04</td>
+                                <td class="p-4 text-slate-300">NEURAL_DOT</td>
+                                <td class="p-4 text-right text-slate-100 font-bold">2.9M</td>
+                            </tr>
+                            <tr class="border-b border-border-muted/50 hover:bg-border-muted/20 transition-colors">
+                                <td class="p-4 text-slate-400">05</td>
+                                <td class="p-4 text-slate-300">DARK_NPU</td>
+                                <td class="p-4 text-right text-slate-100 font-bold">2.4M</td>
+                            </tr>
+                            <tr class="border-b border-border-muted/50 hover:bg-border-muted/20 transition-colors">
+                                <td class="p-4 text-slate-400">06</td>
+                                <td class="p-4 text-slate-300">CYBER_SWARM</td>
+                                <td class="p-4 text-right text-slate-100 font-bold">1.8M</td>
+                            </tr>
+                            <tr class="border-b border-border-muted/50 hover:bg-border-muted/20 transition-colors">
+                                <td class="p-4 text-slate-400">07</td>
+                                <td class="p-4 text-slate-300">BEYOND_X</td>
+                                <td class="p-4 text-right text-slate-100 font-bold">1.2M</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="p-4 mt-auto border-t border-border-muted">
+                    <button
+                        class="w-full py-3 bg-border-muted/50 text-xs font-bold uppercase tracking-widest rounded hover:bg-border-muted transition-colors">View
+                        Full Leaderboard</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Model Registry Restored -->
+        <div class="bg-surface border border-border-muted rounded-xl p-8 overflow-hidden col-span-1 lg:col-span-3">
+            <h3 class="text-sm font-bold uppercase tracking-tight mb-6 text-primary flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary">database</span> Model Registry
+            </h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead>
+                        <tr class="text-slate-500 uppercase text-[10px] tracking-widest border-b border-border-muted">
+                            <th class="pb-3 font-semibold">Version</th>
+                            <th class="pb-3 font-semibold">Model</th>
+                            <th class="pb-3 font-semibold">Accuracy</th>
+                            <th class="pb-3 font-semibold">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="model-table-body" class="divide-y divide-border-muted">
+                        <tr>
+                            <td class="py-4 font-mono text-xs">v4.2.1-stable</td>
+                            <td class="py-4 font-bold">Llama-3-70B-Instruct</td>
+                            <td class="py-4 text-primary font-bold">98.2%</td>
+                            <td class="py-4"><span
+                                    class="px-2 py-1 bg-primary/10 text-primary text-[10px] rounded border border-primary/20 font-bold uppercase tracking-wider">Active</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="py-4 font-mono text-xs">v1.0.5-beta</td>
+                            <td class="py-4 font-bold">Stable Diffusion XL</td>
+                            <td class="py-4 text-primary font-bold">94.8%</td>
+                            <td class="py-4"><span
+                                    class="px-2 py-1 bg-primary/10 text-primary text-[10px] rounded border border-primary/20 font-bold uppercase tracking-wider">Active</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="py-4 font-mono text-xs">v2.1.0-alpha</td>
+                            <td class="py-4 font-bold">Mistral-7B-v0.1</td>
+                            <td class="py-4 text-slate-500 font-bold">89.1%</td>
+                            <td class="py-4"><span
+                                    class="px-2 py-1 bg-slate-800 text-slate-500 text-[10px] rounded border border-slate-700 font-bold uppercase tracking-wider">Inactive</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    <!-- Footer -->
+    <footer class="mt-20 border-t-2 border-primary/20 bg-background-dark py-20 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 relative z-10">
+            <div class="col-span-2 space-y-6">
+                <div class="flex items-center gap-3">
+                    <div class="size-8 text-primary flex flex-col justify-center items-center">
+                        <span class="material-symbols-outlined text-3xl font-bold shadow-[0_0_8px_#00c7b0]">hub</span>
+                    </div>
+                    <h2 class="text-2xl font-bold tracking-tighter">SWARMNET</h2>
+                </div>
+                <p class="text-slate-400 max-w-sm">The decentralized compute infrastructure for the next generation of
+                    artificial intelligence.</p>
+            </div>
+            <div>
+                <h4 class="text-primary text-xs font-bold uppercase tracking-[0.2em] mb-6">RESOURCES</h4>
+                <ul class="space-y-3 text-sm text-slate-400">
+                    <li><a class="hover:text-primary transition-colors" href="#">Whitepaper</a></li>
+                    <li><a class="hover:text-primary transition-colors" href="#">Node Setup Guide</a></li>
+                    <li><a class="hover:text-primary transition-colors" href="#">API Reference</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-primary text-xs font-bold uppercase tracking-[0.2em] mb-6">LEGAL</h4>
+                <ul class="space-y-3 text-sm text-slate-400">
+                    <li><a class="hover:text-primary transition-colors" href="#">Terms of Service</a></li>
+                    <li><a class="hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- Huge watermark -->
+        <div class="absolute -bottom-10 -right-20 pointer-events-none opacity-5 select-none text-primary">
+            <h1 class="text-[30rem] font-black tracking-tighter leading-none">SWARM</h1>
+        </div>
+    </footer>
+    <script src="js/main.js"></script>
+    <script src="js/dashboard.js?v=2"></script>
+</body>
+
+</html>

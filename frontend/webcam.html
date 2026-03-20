@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="SwarmNet Live Webcam Classification — Point your camera at anything and the NPU classifies every frame in real-time.">
+    <title>Live Webcam Classification — SwarmNet</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <!-- ========== NAVIGATION ========== -->
+    <nav class="navbar scrolled" id="navbar">
+        <div class="container">
+            <a href="/" class="nav-logo">
+                <span class="logo-dot"></span> SwarmNet
+            </a>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="/#how-it-works">How It Works</a></li>
+                <li><a href="/#services">Technology</a></li>
+                <li><a href="/classify">Live Demo</a></li>
+                <li><a href="/webcam" class="active">Webcam</a></li>
+                <li><a href="/training">NPU Training</a></li>
+                <li><a href="/benchmark">Benchmark</a></li>
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/#download" class="nav-cta">Join the Swarm</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ========== LIVE WEBCAM ========== -->
+    <section class="webcam-section section-padding" id="webcam" style="padding-top: 120px;">
+        <div class="container">
+            <div class="animate-on-scroll">
+                <div class="section-label">Real-Time</div>
+                <h2 class="section-title">Live <span class="gradient-text">Webcam</span> Classification</h2>
+                <p class="section-subtitle">Point your camera at anything — the NPU classifies every frame in real-time.
+                    See AI
+                    inference happening live on-device.</p>
+            </div>
+
+            <div class="webcam-container animate-on-scroll">
+                <div class="webcam-video-wrap">
+                    <video id="webcam-video" autoplay playsinline muted></video>
+                    <div class="webcam-overlay" id="webcam-overlay" style="display:none;">
+                        <div class="webcam-overlay-top">
+                            <span class="webcam-badge live-badge">● LIVE</span>
+                            <span class="webcam-fps-badge" id="webcam-fps">0 FPS</span>
+                        </div>
+                        <div class="webcam-overlay-bottom">
+                            <div class="webcam-pred-label" id="webcam-label">—</div>
+                            <div class="webcam-pred-conf" id="webcam-confidence">0%</div>
+                            <div class="webcam-meta">
+                                <span>⚡ <span id="webcam-latency">— ms</span></span>
+                                <span>🔧 <span id="webcam-provider">—</span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="webcam-placeholder" id="webcam-placeholder">
+                        <div class="webcam-placeholder-icon">📹</div>
+                        <p>Click Start to begin real-time classification</p>
+                    </div>
+                </div>
+                <div class="webcam-controls">
+                    <button class="btn-primary" id="webcam-start">
+                        <span>📷</span> Start Camera
+                    </button>
+                    <button class="btn-primary btn-danger" id="webcam-stop" style="display:none;">
+                        <span>⏹</span> Stop Camera
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="/" class="nav-logo">
+                        <span class="logo-dot"></span> SwarmNet
+                    </a>
+                    <p>Democratizing AI training for open science. One idle NPU at a time.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Platform</h4>
+                    <a href="/#how-it-works">How It Works</a>
+                    <a href="/#services">Technology</a>
+                    <a href="/classify">Live Demo</a>
+                    <a href="/#hardware">Supported Hardware</a>
+                    <a href="/#download">Download</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Features</h4>
+                    <a href="/classify">Image Classification</a>
+                    <a href="/webcam">Live Webcam</a>
+                    <a href="/training">NPU Training</a>
+                    <a href="/benchmark">Benchmark Race</a>
+                </div>
+                <div class="footer-col">
+                    <h4>Resources</h4>
+                    <a href="#">Documentation</a>
+                    <a href="#">API Reference</a>
+                    <a href="#">GitHub</a>
+                    <a href="#">Blog</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 SwarmNet. Open Science, Open Source.</p>
+                <div class="footer-socials">
+                    <a href="#" aria-label="GitHub">⬡</a>
+                    <a href="#" aria-label="Discord">◈</a>
+                    <a href="#" aria-label="Twitter">✦</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/webcam.js"></script>
+</body>
+
+</html>

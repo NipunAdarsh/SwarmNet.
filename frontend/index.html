@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SwarmNet | Decentralized NPU Computing</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00c7b0",
+                        "secondary": "#7B2FBE",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#080B12",
+                        "surface": "#0D1220",
+                        "border-mute": "#1A2333"
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .glass-card {
+            background: rgba(13, 18, 32, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 199, 176, 0.1);
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at center, rgba(0, 199, 176, 0.15) 0%, rgba(8, 11, 18, 1) 70%);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 overflow-x-hidden">
+<!-- Header -->
+<header class="fixed top-0 w-full z-50 bg-background-dark/80 backdrop-blur-md border-b border-border-mute">
+<div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="flex gap-1" style="flex-direction: column; align-items: center; justify-content: center;">
+<span class="material-symbols-outlined text-4xl text-primary font-bold shadow-[0_0_8px_#00c7b0]">hub</span>
+</div>
+<h2 class="text-2xl font-bold tracking-tighter text-slate-100 uppercase mt-1">SWARM</h2>
+</div>
+<nav id="nav-links" class="hidden md:flex items-center gap-10">
+<a class="text-sm font-medium hover:text-primary transition-colors" href="index.html">HOW IT WORKS</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="demos.html">SCIENCE & DEMOS</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="dashboard.html">LEADERBOARD</a>
+<a class="text-sm font-medium hover:text-primary transition-colors" href="training.html">LIVE TRAINING</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="px-6 py-2 text-sm font-bold border border-transparent hover:border-primary/30 rounded-full transition-all">SIGN IN</button>
+<button class="bg-primary text-background-dark px-6 py-2.5 rounded-full text-sm font-bold hover:shadow-[0_0_20px_rgba(0,199,176,0.4)] transition-all">DONATE COMPUTE</button>
+</div>
+</div>
+</header>
+<!-- Hero Section -->
+<section class="relative pt-32 pb-20 hero-gradient min-h-screen flex flex-col items-center justify-center text-center px-6">
+<div class="absolute inset-0 z-0 opacity-40 pointer-events-none">
+    <canvas id="globe-canvas" class="w-full h-full object-cover"></canvas>
+</div>
+<div class="relative z-10 max-w-4xl mx-auto">
+<div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold tracking-widest mb-8 uppercase">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+</span>
+                Live Network Active
+            </div>
+<h1 class="text-5xl md:text-8xl font-black tracking-tight mb-8 leading-[0.9] text-slate-100">
+                YOUR DEVICE.<br/>THE FUTURE OF <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">SCIENCE.</span>
+</h1>
+<p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-12 font-medium">
+                Donate idle NPU compute. Train open-source models. Accelerate discovery. Join the global swarm of neural processing units.
+            </p>
+<div class="flex flex-col sm:flex-row items-center justify-center gap-6">
+<a href="dashboard.html" class="w-full sm:w-auto px-10 py-4 bg-primary text-background-dark rounded-full font-bold text-lg hover:shadow-[0_0_30px_rgba(0,199,176,0.5)] transition-all uppercase tracking-tight">START DONATING</a>
+<a href="training.html" class="w-full sm:w-auto px-10 py-4 border border-border-mute hover:border-primary/50 rounded-full font-bold text-lg transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">language</span> SEE LIVE NETWORK
+                </a>
+</div>
+</div>
+<!-- Live Counters -->
+<div class="mt-24 grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl z-10">
+<div class="flex flex-col items-center md:items-start p-6 border-l border-primary/20 bg-primary/5">
+<span class="text-xs font-mono text-primary/60 uppercase tracking-widest mb-1">Active Nodes</span>
+<span class="text-3xl font-bold font-mono text-slate-100" id="dash-active-nodes">12,842</span>
+</div>
+<div class="flex flex-col items-center md:items-start p-6 border-l border-primary/20 bg-primary/5">
+<span class="text-xs font-mono text-primary/60 uppercase tracking-widest mb-1">Compute Donated</span>
+<span class="text-3xl font-bold font-mono text-slate-100">4.2 PFLOPS</span>
+</div>
+<div class="flex flex-col items-center md:items-start p-6 border-l border-primary/20 bg-primary/5">
+<span class="text-xs font-mono text-primary/60 uppercase tracking-widest mb-1">Models Trained</span>
+<span class="text-3xl font-bold font-mono text-slate-100">38</span>
+</div>
+</div>
+</section>
+<!-- How It Works Section -->
+<section class="py-24 px-6 bg-background-dark" id="how-it-works">
+<div class="max-w-7xl mx-auto">
+<div class="mb-16">
+<h2 class="text-4xl font-bold text-slate-100 mb-4">HOW THE SWARM WORKS</h2>
+<div class="w-20 h-1 bg-primary"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Card 01 -->
+<div class="glass-card p-10 rounded-xl relative group overflow-hidden border-t-2 border-t-primary/50">
+<div class="absolute top-0 left-0 w-full h-full bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<span class="text-6xl font-black text-primary/10 absolute top-4 right-6">01</span>
+<div class="mb-6 text-primary">
+<span class="material-symbols-outlined text-4xl hover:drop-shadow-[0_0_10px_#00c7b0]">download_for_offline</span>
+</div>
+<h3 class="text-2xl font-bold text-slate-100 mb-4">INSTALL</h3>
+<p class="text-slate-400 leading-relaxed">Download the lightweight client optimized for your device's NPU architecture. Setup takes less than 60 seconds.</p>
+</div>
+<!-- Card 02 -->
+<div class="glass-card p-10 rounded-xl relative group overflow-hidden border-t-2 border-t-primary/50">
+<div class="absolute top-0 left-0 w-full h-full bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<span class="text-6xl font-black text-primary/10 absolute top-4 right-6">02</span>
+<div class="mb-6 text-primary">
+<span class="material-symbols-outlined text-4xl hover:drop-shadow-[0_0_10px_#00c7b0]">memory</span>
+</div>
+<h3 class="text-2xl font-bold text-slate-100 mb-4">CONTRIBUTE</h3>
+<p class="text-slate-400 leading-relaxed">Your idle NPU cycles are securely pooled to process scientific training tasks without impacting your daily performance.</p>
+</div>
+<!-- Card 03 -->
+<div class="glass-card p-10 rounded-xl relative group overflow-hidden border-t-2 border-t-primary/50">
+<div class="absolute top-0 left-0 w-full h-full bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<span class="text-6xl font-black text-primary/10 absolute top-4 right-6">03</span>
+<div class="mb-6 text-primary">
+<span class="material-symbols-outlined text-4xl hover:drop-shadow-[0_0_10px_#00c7b0]">query_stats</span>
+</div>
+<h3 class="text-2xl font-bold text-slate-100 mb-4">EARN &amp; TRACK</h3>
+<p class="text-slate-400 leading-relaxed">Monitor your real-time impact on the science dashboard and earn network reputation and reward tokens.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Impact Section -->
+<section class="py-24 px-6 bg-surface">
+<div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16">
+<div class="w-full lg:w-1/2">
+<div class="relative rounded-2xl overflow-hidden border border-border-mute group">
+<img alt="Researcher in lab" class="w-full aspect-[4/5] object-cover grayscale hover:grayscale-0 transition-all duration-700" data-alt="Scientific researcher looking at data visualization" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCitYq-WoLKAgP4sm6R_B2fIf9z2OAxyFKmsw1JFWmYJspkbZ7fFqcS3ObzpSX-qG1lUaMEVJmMjNFGG5BDDL-t7ed8ogOCpsyT3ktax-IHw2BQq8Nn8PO7P7wdjyro56JXNcRjkjW3IPDVKW37IwKLl3a-1MIy6v3i8_iXVid1GJV6vYfyy-rqFsbXbw8Wx0-HEJAniq6VDOTC6zPbRJDufrj2fyHGs9zWYbTV06sUowIS58w_I4EAf_hQnBuYi68dAv9Y8OO2rzY"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark via-transparent to-transparent"></div>
+<div class="absolute bottom-8 left-8">
+<p class="text-primary font-bold">DR. ELENA VANCE</p>
+<p class="text-slate-400 text-sm">Lead Researcher, Neural Genomics Project</p>
+</div>
+</div>
+</div>
+<div class="w-full lg:w-1/2">
+<h2 class="text-4xl md:text-5xl font-black text-slate-100 mb-8 leading-tight italic">
+                    "OUR SWARM COMPLETED WHAT WOULD HAVE TAKEN A SINGLE GPU 847 YEARS. IN 6 DAYS."
+                </h2>
+<p class="text-slate-400 text-lg mb-12">
+                    By decentralizing the most demanding workloads, we're unlocking scientific breakthroughs that were previously computationally impossible.
+                </p>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+<div class="p-6 bg-background-dark rounded-xl border border-border-mute transition hover:border-primary/50 hover:shadow-[0_0_15px_rgba(0,199,176,0.2)]">
+<div class="text-primary text-3xl font-bold mb-1">98%</div>
+<div class="text-slate-500 text-xs uppercase tracking-tighter">Cost Reduction</div>
+</div>
+<div class="p-6 bg-background-dark rounded-xl border border-border-mute transition hover:border-primary/50 hover:shadow-[0_0_15px_rgba(0,199,176,0.2)]">
+<div class="text-primary text-3xl font-bold mb-1">142K+</div>
+<div class="text-slate-500 text-xs uppercase tracking-tighter">Active Nodes</div>
+</div>
+<div class="p-6 bg-background-dark rounded-xl border border-border-mute transition hover:border-primary/50 hover:shadow-[0_0_15px_rgba(0,199,176,0.2)]">
+<div class="text-primary text-3xl font-bold mb-1">1.2TB</div>
+<div class="text-slate-500 text-xs uppercase tracking-tighter">Data Processed/Hr</div>
+</div>
+</div>
+<button class="mt-12 group flex items-center gap-3 text-primary font-bold hover:gap-5 transition-all">
+                    READ CASE STUDY <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Hardware Support -->
+<section class="py-20 px-6 border-y border-border-mute">
+<div class="max-w-7xl mx-auto text-center">
+<p class="text-slate-500 text-sm font-bold uppercase tracking-[0.3em] mb-12">Optimized for Industry-Leading Hardware</p>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-12 opacity-50 grayscale">
+<div class="flex items-center justify-center p-4 hover:opacity-100 hover:grayscale-0 transition-all cursor-pointer hover:drop-shadow-[0_0_15px_rgba(0,199,176,0.5)]">
+<span class="text-xl font-bold text-slate-100">Intel® Core™ Ultra</span>
+</div>
+<div class="flex items-center justify-center p-4 hover:opacity-100 hover:grayscale-0 transition-all cursor-pointer hover:drop-shadow-[0_0_15px_rgba(0,199,176,0.5)]">
+<span class="text-xl font-bold text-slate-100">AMD Ryzen™ AI</span>
+</div>
+<div class="flex items-center justify-center p-4 hover:opacity-100 hover:grayscale-0 transition-all cursor-pointer hover:drop-shadow-[0_0_15px_rgba(0,199,176,0.5)]">
+<span class="text-xl font-bold text-slate-100">Snapdragon® X</span>
+</div>
+<div class="flex items-center justify-center p-4 hover:opacity-100 hover:grayscale-0 transition-all cursor-pointer hover:drop-shadow-[0_0_15px_rgba(0,199,176,0.5)]">
+<span class="text-xl font-bold text-slate-100">Apple Silicon</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-background-dark border-t border-primary/50 pt-24 pb-12 px-6 relative overflow-hidden">
+<div class="absolute -bottom-10 -right-10 text-[15rem] font-black text-slate-100/5 select-none pointer-events-none tracking-tighter">
+            SWARM
+        </div>
+<div class="max-w-7xl mx-auto relative z-10">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
+<div class="col-span-1 md:col-span-1">
+<div class="flex items-center gap-3 mb-8">
+<div class="flex gap-1">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="w-2 h-2 rounded-full bg-primary/60"></span>
+<span class="w-2 h-2 rounded-full bg-primary/30"></span>
+</div>
+<h2 class="text-xl font-bold tracking-tighter text-slate-100 uppercase">SWARM</h2>
+</div>
+<p class="text-slate-400 text-sm leading-relaxed mb-6">
+                        Empowering global scientific discovery through decentralized NPU computing. Join the revolution.
+                    </p>
+</div>
+<div>
+<h4 class="text-slate-100 font-bold mb-6">Network</h4>
+<ul class="space-y-4 text-slate-400 text-sm">
+<li><a class="hover:text-primary transition-colors" href="dashboard.html">Leaderboard</a></li>
+<li><a class="hover:text-primary transition-colors" href="dashboard.html">Status</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Governance</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-slate-100 font-bold mb-6">Resources</h4>
+<ul class="space-y-4 text-slate-400 text-sm">
+<li><a class="hover:text-primary transition-colors" href="#">Documentation</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">API Reference</a></li>
+<li><a class="hover:text-primary transition-colors" href="demos.html">Demos</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-slate-100 font-bold mb-6">Newsletter</h4>
+<div class="relative">
+<input class="w-full bg-surface border border-border-mute rounded-full px-6 py-3 text-sm focus:border-primary focus:ring-1 focus:outline-none" placeholder="you@example.com" type="email"/>
+<button class="absolute right-2 top-2 w-8 h-8 bg-primary rounded-full flex items-center justify-center text-background-dark transition hover:shadow-[0_0_10px_#00c7b0]">
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<div class="pt-12 border-t border-border-mute flex flex-col md:flex-row items-center justify-between gap-6 text-slate-500 text-xs font-medium uppercase tracking-widest">
+<p>© 2026 SWARMNET DECENTRALIZED NETWORK.</p>
+<div class="flex gap-8">
+<a class="hover:text-slate-300 transition" href="#">Privacy</a>
+<a class="hover:text-slate-300 transition" href="#">Terms</a>
+</div>
+</div>
+</div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="js/globe.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

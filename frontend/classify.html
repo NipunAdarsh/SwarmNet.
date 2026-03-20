@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="SwarmNet Image Classification — Upload an image and watch NPU-accelerated inference classify it in milliseconds.">
+  <title>Image Classification — SwarmNet</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+  <!-- ========== NAVIGATION ========== -->
+  <nav class="navbar scrolled" id="navbar">
+    <div class="container">
+      <a href="/" class="nav-logo">
+        <span class="logo-dot"></span> SwarmNet
+      </a>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="/#how-it-works">How It Works</a></li>
+        <li><a href="/#services">Technology</a></li>
+        <li><a href="/classify" class="active">Live Demo</a></li>
+        <li><a href="/webcam">Webcam</a></li>
+        <li><a href="/training">NPU Training</a></li>
+        <li><a href="/benchmark">Benchmark</a></li>
+        <li><a href="/dashboard">Dashboard</a></li>
+        <li><a href="/#download" class="nav-cta">Join the Swarm</a></li>
+      </ul>
+      <div class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ========== LIVE INFERENCE DEMO ========== -->
+  <section class="demo section-padding" id="demo" style="padding-top: 120px;">
+    <div class="container">
+      <div class="animate-on-scroll">
+        <div class="section-label">Interactive</div>
+        <h2 class="section-title">Experience the <span class="gradient-text">Swarm</span> Live</h2>
+        <p class="section-subtitle">Upload an image and watch SwarmNet's NPU-accelerated inference classify it in
+          milliseconds. Compare Remote NPU vs Local CPU performance in real-time.</p>
+      </div>
+
+      <div class="demo-container animate-on-scroll">
+        <!-- Backend status bar -->
+        <div class="demo-status-bar">
+          <div class="demo-status-left">
+            <span class="demo-status-dot" id="status-dot"></span>
+            <span class="demo-status-text" id="status-text">Checking backend…</span>
+          </div>
+          <button class="demo-health-btn" id="health-btn" title="Check backend health">
+            <span>↻</span> Check Health
+          </button>
+        </div>
+
+        <div class="demo-grid">
+          <!-- Left: Upload Area -->
+          <div class="demo-upload-panel">
+            <div class="demo-upload-zone" id="upload-zone">
+              <div class="upload-icon">📤</div>
+              <h3>Drop Image Here</h3>
+              <p>or click to browse</p>
+              <p class="upload-formats">PNG, JPEG, BMP, WebP</p>
+              <input type="file" id="file-input" accept="image/png,image/jpeg,image/bmp,image/webp" hidden>
+            </div>
+            <div class="demo-preview" id="preview-area" style="display:none;">
+              <img id="preview-img" alt="Preview">
+              <button class="demo-clear-btn" id="clear-btn">✕ Clear</button>
+            </div>
+
+            <!-- Mode Toggle -->
+            <div class="demo-mode-toggle">
+              <label class="toggle-label">
+                <input type="radio" name="infer-mode" value="remote" checked>
+                <span class="toggle-pill remote">🌐 Remote NPU</span>
+              </label>
+              <label class="toggle-label">
+                <input type="radio" name="infer-mode" value="local">
+                <span class="toggle-pill local">💻 Local CPU</span>
+              </label>
+            </div>
+
+            <button class="btn-primary demo-run-btn" id="run-btn" disabled>
+              <span>🚀</span> Run Inference
+            </button>
+          </div>
+
+          <!-- Right: Results Panel -->
+          <div class="demo-results-panel">
+            <!-- State badge -->
+            <div class="demo-state-badge" id="state-badge">
+              <span class="state-dot idle"></span>
+              <span id="state-label">IDLE</span>
+            </div>
+
+            <!-- Loading spinner -->
+            <div class="demo-loading" id="demo-loading" style="display:none;">
+              <div class="spinner"></div>
+              <p>Processing via Swarm Node…</p>
+            </div>
+
+            <!-- Results -->
+            <div class="demo-results" id="demo-results" style="display:none;">
+              <!-- Telemetry row -->
+              <div class="telemetry-grid">
+                <div class="telemetry-card">
+                  <div class="telemetry-label">Round-trip</div>
+                  <div class="telemetry-value green" id="t-roundtrip">—</div>
+                </div>
+                <div class="telemetry-card">
+                  <div class="telemetry-label">Backend</div>
+                  <div class="telemetry-value purple" id="t-backend">—</div>
+                </div>
+                <div class="telemetry-card">
+                  <div class="telemetry-label">Provider</div>
+                  <div class="telemetry-value orange" id="t-provider">—</div>
+                </div>
+              </div>
+
+              <!-- Top prediction -->
+              <div class="prediction-main">
+                <h3>🏷️ Top Prediction</h3>
+                <div class="prediction-label" id="pred-label">—</div>
+                <div class="confidence-bar-wrap">
+                  <div class="confidence-bar" id="pred-bar" style="width:0%"></div>
+                </div>
+                <span class="confidence-pct" id="pred-pct">0%</span>
+              </div>
+
+              <!-- Top-5 -->
+              <div class="top5-section" id="top5-section">
+                <h4>Top-5 Classes</h4>
+                <div id="top5-bars"></div>
+              </div>
+            </div>
+
+            <!-- Empty state -->
+            <div class="demo-empty" id="demo-empty">
+              <div class="empty-icon">🔬</div>
+              <p>Upload an image and click <strong>Run Inference</strong> to see NPU-accelerated classification in
+                action.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="/" class="nav-logo">
+            <span class="logo-dot"></span> SwarmNet
+          </a>
+          <p>Democratizing AI training for open science. One idle NPU at a time.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Platform</h4>
+          <a href="/#how-it-works">How It Works</a>
+          <a href="/#services">Technology</a>
+          <a href="/classify">Live Demo</a>
+          <a href="/#hardware">Supported Hardware</a>
+          <a href="/#download">Download</a>
+        </div>
+        <div class="footer-col">
+          <h4>Features</h4>
+          <a href="/classify">Image Classification</a>
+          <a href="/webcam">Live Webcam</a>
+          <a href="/training">NPU Training</a>
+          <a href="/benchmark">Benchmark Race</a>
+        </div>
+        <div class="footer-col">
+          <h4>Resources</h4>
+          <a href="#">Documentation</a>
+          <a href="#">API Reference</a>
+          <a href="#">GitHub</a>
+          <a href="#">Blog</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 SwarmNet. Open Science, Open Source.</p>
+        <div class="footer-socials">
+          <a href="#" aria-label="GitHub">⬡</a>
+          <a href="#" aria-label="Discord">◈</a>
+          <a href="#" aria-label="Twitter">✦</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/main.js"></script>
+  <script src="js/inference.js"></script>
+</body>
+
+</html>
