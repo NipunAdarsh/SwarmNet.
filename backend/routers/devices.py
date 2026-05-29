@@ -6,10 +6,10 @@ from typing import Any, Dict
 from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel, Field
 
-from routers.auth import verify_user_token
-from services.task_service import TaskService
-from services.xp_service import XPService
-from supabase_client import get_supabase_service_client
+from backend.routers.auth import verify_user_token
+from backend.services.task_service import TaskService
+from backend.services.xp_service import XPService
+from backend.supabase_client import get_supabase_service_client
 
 router = APIRouter(tags=["devices"])
 

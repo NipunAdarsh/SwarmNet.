@@ -23,10 +23,10 @@ import numpy as np
 # Ensure parent dir is on path for package imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from npu_es.dataset import load_mnist
-from npu_es.es_engine import ESConfig, EvolutionaryStrategy
-from npu_es.evaluator import NPUEvaluator
-from npu_es.onnx_model import build_mlp_onnx, init_weights, save_onnx, update_weights
+from backend.npu_es.dataset import load_mnist
+from backend.npu_es.es_engine import ESConfig, EvolutionaryStrategy
+from backend.npu_es.evaluator import NPUEvaluator
+from backend.npu_es.onnx_model import build_mlp_onnx, init_weights, save_onnx, update_weights
 
 logging.basicConfig(
     level=logging.INFO,

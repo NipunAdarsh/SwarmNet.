@@ -6,7 +6,7 @@ from typing import List
 from fastapi import APIRouter, Header, HTTPException, status
 from pydantic import BaseModel, Field
 
-from supabase_client import get_supabase_service_client
+from backend.supabase_client import get_supabase_service_client
 
 router = APIRouter(tags=["admin"])
 

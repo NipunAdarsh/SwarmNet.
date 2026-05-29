@@ -5,7 +5,7 @@ from typing import Any, Dict, Optional
 from fastapi import APIRouter, Depends, Header, HTTPException, status
 from pydantic import BaseModel, EmailStr
 
-from supabase_client import get_supabase_anon_client, get_supabase_service_client
+from backend.supabase_client import get_supabase_anon_client, get_supabase_service_client
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 

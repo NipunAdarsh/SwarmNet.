@@ -17,17 +17,30 @@ except ImportError:
     from pydantic import BaseSettings  # Fallback for older pydantic versions
 
 
-class ServerConfig(BaseSettings):
+class BaseSubSettings(BaseSettings):
+    """Base settings for nested sub-configurations that load from .env."""
+    model_config = {
+        "env_file": ".env",
+        "env_file_encoding": "utf-8",
+        "case_sensitive": False,
+        "extra": "ignore",
+    }
+
+
+class ServerConfig(BaseSubSettings):
     """Server configuration."""
 
     HOST: str = Field(default="0.0.0.0", description="Server bind host")
     PORT: int = Field(default=8000, ge=1, le=65535, description="Server bind port")
     DEBUG: bool = Field(default=False, description="Enable debug mode")
 
-    model_config = {"env_prefix": ""}
+    model_config = {
+        **BaseSubSettings.model_config,
+        "env_prefix": "",
+    }
 
 
-class CORSConfig(BaseSettings):
+class CORSConfig(BaseSubSettings):
     """CORS configuration."""
 
     ORIGINS: str = Field(
@@ -41,10 +54,13 @@ class CORSConfig(BaseSettings):
         """Parse origins string into list."""
         return [origin.strip() for origin in self.ORIGINS.split(",") if origin.strip()]
 
-    model_config = {"env_prefix": "CORS_"}
+    model_config = {
+        **BaseSubSettings.model_config,
+        "env_prefix": "CORS_",
+    }
 
 
-class SecurityConfig(BaseSettings):
+class SecurityConfig(BaseSubSettings):
     """Security configuration."""
 
     SSL_CERT_FILE: Optional[str] = Field(default=None, description="Path to SSL certificate file")
@@ -60,18 +76,27 @@ class SecurityConfig(BaseSettings):
     @field_validator("ADMIN_SECRET")
     @classmethod
     def validate_admin_secret(cls, v):
-        """Warn if ADMIN_SECRET is too short in production."""
-        if v and len(v) < 16:
+        """Enforce presence of ADMIN_SECRET in production.
+        Raises RuntimeError if empty. Logs a warning if present but shorter than 16 characters.
+        """
+        # If the admin secret is missing, abort early – the system should not start without it.
+        if not v:
+            raise RuntimeError("ADMIN_SECRET must be set in the environment for production use.")
+        # Warn if the secret is weak (shorter than 16 chars).
+        if len(v) < 16:
             import logging
             logging.getLogger(__name__).warning(
                 "ADMIN_SECRET is shorter than 16 characters. Use a stronger secret in production."
             )
         return v
 
-    model_config = {"env_prefix": ""}
+    model_config = {
+        **BaseSubSettings.model_config,
+        "env_prefix": "",
+    }
 
 
-class ImageConfig(BaseSettings):
+class ImageConfig(BaseSubSettings):
     """Image validation configuration."""
 
     MAX_SIZE_MB: int = Field(default=10, ge=1, le=100, description="Maximum image size in MB")
@@ -92,10 +117,13 @@ class ImageConfig(BaseSettings):
         """Parse formats string into set."""
         return {fmt.strip().lower() for fmt in self.ALLOWED_FORMATS.split(",") if fmt.strip()}
 
-    model_config = {"env_prefix": "IMAGE_"}
+    model_config = {
+        **BaseSubSettings.model_config,
+        "env_prefix": "IMAGE_",
+    }
 
 
-class ESConfig(BaseSettings):
+class ESConfig(BaseSubSettings):
     """Evolutionary Strategies training configuration."""
 
     POPULATION_SIZE: int = Field(default=50, ge=2, le=500, description="Population size (must be even)")
@@ -113,10 +141,13 @@ class ESConfig(BaseSettings):
             return v + 1
         return v
 
-    model_config = {"env_prefix": "ES_"}
+    model_config = {
+        **BaseSubSettings.model_config,
+        "env_prefix": "ES_",
+    }
 
 
-class ModelConfig(BaseSettings):
+class ModelConfig(BaseSubSettings):
     """Model paths and NPU configuration."""
 
     MODEL_PATH: str = Field(default="model/mobilenetv2-12.onnx", description="Path to main ONNX model")
@@ -129,25 +160,34 @@ class ModelConfig(BaseSettings):
         description="Simulated NPU provider name",
     )
 
-    model_config = {"env_prefix": ""}
+    model_config = {
+        **BaseSubSettings.model_config,
+        "env_prefix": "",
+    }
 
 
-class SwarmConfig(BaseSettings):
+class SwarmConfig(BaseSubSettings):
     """Swarm discovery configuration."""
 
     MULTICAST_GROUP: str = Field(default="224.1.1.1", description="Multicast group for discovery")
     MULTICAST_PORT: int = Field(default=5007, ge=1, le=65535, description="Multicast port")
     NODE_HEARTBEAT_INTERVAL: int = Field(default=5, ge=1, le=60, description="Heartbeat interval in seconds")
 
-    model_config = {"env_prefix": "SWARM_"}
+    model_config = {
+        **BaseSubSettings.model_config,
+        "env_prefix": "SWARM_",
+    }
 
 
-class RateLimitConfig(BaseSettings):
+class RateLimitConfig(BaseSubSettings):
     """Rate limiting configuration."""
 
     REQUESTS_PER_MINUTE: int = Field(default=120, ge=1, le=10000, description="Requests per minute per IP")
 
-    model_config = {"env_prefix": "RATE_LIMIT_"}
+    model_config = {
+        **BaseSubSettings.model_config,
+        "env_prefix": "RATE_LIMIT_",
+    }
 
 
 class AppConfig(BaseSettings):
@@ -170,6 +210,7 @@ class AppConfig(BaseSettings):
         "env_file": ".env",
         "env_file_encoding": "utf-8",
         "case_sensitive": False,
+        "extra": "ignore",
     }
 
 

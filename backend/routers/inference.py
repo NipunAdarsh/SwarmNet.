@@ -46,21 +46,17 @@ except ImportError:
     _HAS_SLOWAPI = False
 
 # Import centralized configuration
-from config import config
+from backend.config import config
 
 # Import models
-from models import InferenceRequest, InferenceResponse, FrameRequest, BenchmarkControlledRequest
+from backend.models import InferenceRequest, InferenceResponse, FrameRequest, BenchmarkControlledRequest
 
 # Import services
-from services.inference_service import inference_service
+from backend.services.inference_service import inference_service
 
 # ---------------------------------------------------------------------------
 # Logging
 # ---------------------------------------------------------------------------
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s | %(levelname)-7s | %(message)s",
-)
 logger = logging.getLogger("swarm-backend")
 
 # ---------------------------------------------------------------------------
@@ -92,11 +88,9 @@ _metrics = {
 # ---------------------------------------------------------------------------
 # Swarm registry & simulated nodes
 # ---------------------------------------------------------------------------
-import sys
-sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-from swarm.registry import SwarmRegistry
-from swarm.node import SwarmNode
-from swarm.models import NodeInfo, NodeStatus, EnergyBenchmark, CloudComparison, ModelVersion
+from backend.swarm.registry import SwarmRegistry
+from backend.swarm.node import SwarmNode
+from backend.swarm.models import NodeInfo, NodeStatus, EnergyBenchmark, CloudComparison, ModelVersion
 
 _swarm_registry: Optional[SwarmRegistry] = None
 _swarm_nodes: list[SwarmNode] = []
@@ -444,57 +438,6 @@ def _preprocess_image(raw_bytes: bytes) -> np.ndarray:
 # Routes
 # ---------------------------------------------------------------------------
 
-@router.get("/")
-async def serve_index():
-    """Serve the SwarmNet frontend landing page."""
-    index_path = FRONTEND_DIR / "index.html"
-    if index_path.exists():
-        return FileResponse(str(index_path), media_type="text/html")
-    return {"message": "SwarmNet API is running. Frontend not found."}
-
-@router.get("/{page}.html")
-async def serve_any_html(page: str):
-    path = FRONTEND_DIR / f"{page}.html"
-    if path.exists():
-        return FileResponse(str(path), media_type="text/html")
-    from fastapi import HTTPException
-    raise HTTPException(status_code=404, detail="Page not found")
-
-
-@router.get("/classify")
-async def serve_classify():
-    """Serve the Image Classification feature page."""
-    return FileResponse(str(FRONTEND_DIR / "classify.html"), media_type="text/html")
-
-
-@router.get("/webcam")
-async def serve_webcam_page():
-    """Serve the Live Webcam Classification feature page."""
-    return FileResponse(str(FRONTEND_DIR / "webcam.html"), media_type="text/html")
-
-
-@router.get("/demos")
-async def serve_demos():
-    """Serve the Swarm Demos page."""
-    return FileResponse(str(FRONTEND_DIR / "demos.html"), media_type="text/html")
-
-@router.get("/training")
-async def serve_training():
-    """Serve the NPU Training (ES) feature page."""
-    return FileResponse(str(FRONTEND_DIR / "training.html"), media_type="text/html")
-
-
-@router.get("/benchmark")
-async def serve_benchmark_page():
-    """Serve the NPU vs CPU Benchmark Race feature page."""
-    return FileResponse(str(FRONTEND_DIR / "benchmark.html"), media_type="text/html")
-
-
-@router.get("/dashboard")
-async def serve_dashboard_page():
-    """Serve the Swarm Visualization Dashboard."""
-    return FileResponse(str(FRONTEND_DIR / "dashboard.html"), media_type="text/html")
-
 
 @router.get("/health")
 async def health():
@@ -642,7 +585,7 @@ async def infer(request: InferenceRequest):
         raise HTTPException(status_code=400, detail=f"Invalid base64 payload: {exc}")
 
     # --- Validate image ------------------------------------------------
-    from validators.image import validate_image_or_raise
+    from backend.validators.image import validate_image_or_raise
     if request.data_type == "base64_image":
         validate_image_or_raise(raw_bytes)  # Raises 413/415 on failure
 
@@ -752,7 +695,7 @@ async def infer_cpu(request: InferenceRequest):
         raise HTTPException(status_code=400, detail=f"Invalid base64 payload: {exc}")
 
     # --- Validate image ------------------------------------------------
-    from validators.image import validate_image_or_raise
+    from backend.validators.image import validate_image_or_raise
     if request.data_type == "base64_image":
         validate_image_or_raise(raw_bytes)  # Raises 413/415 on failure
 
@@ -930,7 +873,7 @@ async def infer_frame(request: FrameRequest):
         raise HTTPException(status_code=400, detail="Invalid base64 frame")
 
     # --- Validate image ------------------------------------------------
-    from validators.image import validate_image_or_raise
+    from backend.validators.image import validate_image_or_raise
     validate_image_or_raise(raw_bytes)  # Raises 413/415 on failure
 
     if _model_session is None:
@@ -1199,12 +1142,10 @@ async def ws_train(websocket: WebSocket):
             generations, pop_size, sigma, learning_rate
         )
 
-        import sys
-        sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-        from npu_es.dataset import load_mnist
-        from npu_es.es_engine import ESConfig, EvolutionaryStrategy
-        from npu_es.evaluator import NPUEvaluator
-        from npu_es.onnx_model import build_mlp_onnx, init_weights, update_weights
+        from backend.npu_es.dataset import load_mnist
+        from backend.npu_es.es_engine import ESConfig, EvolutionaryStrategy
+        from backend.npu_es.evaluator import NPUEvaluator
+        from backend.npu_es.onnx_model import build_mlp_onnx, init_weights, update_weights
 
         await websocket.send_json({"type": "status", "message": "Loading MNIST dataset..."})
         X_train, y_train, X_test, y_test = load_mnist(max_train=10000, max_test=2000)

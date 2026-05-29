@@ -3,7 +3,7 @@
 from datetime import datetime, timedelta, timezone
 from typing import Dict
 
-from supabase_client import get_supabase_service_client
+from backend.supabase_client import get_supabase_service_client
 
 
 class XPService:

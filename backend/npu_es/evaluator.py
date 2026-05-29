@@ -98,7 +98,7 @@ class NPUEvaluator:
             return
 
         import onnxruntime as ort
-        from npu_es.onnx_model import build_mlp_dynamic_weights
+        from backend.npu_es.onnx_model import build_mlp_dynamic_weights
 
         # Build the dynamic-weights model (weights are inputs, not initializers)
         model = build_mlp_dynamic_weights(self.layers)

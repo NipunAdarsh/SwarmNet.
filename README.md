@@ -1,4 +1,54 @@
-# SwarmNet Ultimate: The Friendly NPU Supercomputer
+# SwarmNet
+
+## Overview
+SwarmNet is a FastAPI backend paired with a vanilla‑JS/Three.js frontend that provides distributed NPU‑first inference, edge‑training, and a gamified dashboard.  The system consists of:
+- **Backend API** – FastAPI server handling authentication, device registration, inference, and swarm management.
+- **Swarm layer** – Simulated (or real) edge compute nodes that advertise capabilities and are selected for inference routing.
+- **Frontend** – Static HTML/JS assets that visualize the swarm, allow live webcam classification, and display dashboards.
+
+## Quick‑Start
+```bash
+# Clone the repo and cd into the project root
+git clone <repo-url>
+cd "SwarmNet final"
+
+# Create a virtual environment (Python 3.10+ recommended)
+python -m venv .venv
+# Windows: .venv\Scripts\activate
+# Unix/macOS: source .venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Set required environment variables (example .env file)
+cp .env.example .env
+# edit .env to provide ADMIN_SECRET and any Supabase credentials
+
+# Run the server in development mode
+uvicorn backend.main:app --reload
+```
+The API documentation is available at `http://localhost:8000/docs`.
+
+## Architecture Diagram
+*(Add an architecture diagram to `docs/architecture.png` – showing Backend ↔ Swarm Registry ↔ Nodes ↔ Frontend.)*
+
+## API Overview
+- **/api/v1/infer** – Perform inference on a base64‑encoded image.
+- **/api/v1/swarm/** – Swarm management endpoints (node list, metrics, enable/disable).
+- **/auth/** – Supabase‑backed authentication routes.
+- **/devices/** – Register edge devices and fetch tasks.
+- **/dashboard/** – Dashboard data for the UI.
+- Swagger UI: `http://localhost:8000/docs`
+
+## Development
+- Run tests: `pytest`
+- Lint: `ruff check .`
+- Type check: `mypy .`
+- Build Docker image: `docker build -t swarmnet .`
+
+## Contributing
+Please run the test suite and linting before submitting a PR. See `CONTRIBUTING.md` for guidelines.
+
 
 > **Note:** This project is currently **incomplete**. I am actively working on improving the features, documentation, and overall performance. Stay tuned for updates!
 

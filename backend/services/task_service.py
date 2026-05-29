@@ -2,7 +2,7 @@
 
 from typing import Any, Dict, Optional
 
-from supabase_client import get_supabase_service_client
+from backend.supabase_client import get_supabase_service_client
 
 
 class TaskService:

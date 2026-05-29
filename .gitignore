@@ -170,3 +170,4 @@ backend/model/*.onnx_data
 # OS specific
 Thumbs.db
 .DS_Store
+*.db

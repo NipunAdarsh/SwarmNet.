@@ -2,8 +2,8 @@
 
 from fastapi import APIRouter, Depends, HTTPException, status
 
-from routers.auth import get_current_user
-from supabase_client import get_supabase_service_client
+from backend.routers.auth import get_current_user
+from backend.supabase_client import get_supabase_service_client
 
 router = APIRouter(tags=["dashboard"])
 

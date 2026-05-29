@@ -1,3 +1,5 @@
+# Load centralized JSON logging configuration
+import backend.logging_config  # noqa: F401
 import logging
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
@@ -5,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 
-from config import config
+from backend.config import config
 
 # Optional slowapi imports
 try:
@@ -18,7 +20,7 @@ except ImportError:
 # Frontend directory mapping
 FRONTEND_DIR = Path(__file__).resolve().parent.parent / "frontend"
 
-from routers.inference import lifespan as legacy_lifespan
+from backend.routers.inference import lifespan as legacy_lifespan
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -26,11 +28,24 @@ async def lifespan(app: FastAPI):
         yield
 
 app = FastAPI(
-    title="SwarmNet Combined Backend API",
-    description="Distributed NPU compute orchestration and local NPU Inference",
+    title="SwarmNet Ultimate",
+    description="SwarmNet FastAPI Backend",
     version="2.0.0",
     lifespan=lifespan,
 )
+
+@app.on_event("startup")
+async def _validate_startup_config():
+    # Ensure ADMIN_SECRET is set (the validator already raises on import, but double‑check here for clarity)
+    from backend.config import config
+    try:
+        # Accessing config will trigger the SecurityConfig validator above
+        _ = config.security.ADMIN_SECRET
+    except RuntimeError as exc:
+        import logging, sys
+        logging.getLogger("swarm-backend").error(str(exc))
+        sys.exit(1)
+
 
 # CORS
 app.add_middleware(
@@ -59,20 +74,25 @@ async def health_check():
     return {"status": "ok", "version": "2.0.0"}
 
 # Register Supabase API route groups
-from routers.auth import router as auth_router
-from routers.admin import router as admin_router
-from routers.dashboard import router as dashboard_router
-from routers.devices import router as devices_router
+from backend.routers.auth import router as auth_router
+from backend.routers.admin import router as admin_router
+from backend.routers.dashboard import router as dashboard_router
+from backend.routers.devices import router as devices_router
+from backend.routers.inference import router as inference_router
 
-from routers.inference import router as inference_router
 app.include_router(auth_router)
 app.include_router(admin_router)
 app.include_router(dashboard_router)
 app.include_router(devices_router)
 app.include_router(inference_router)
 
-# Mount frontend at the root (must be done last so it doesn't swallow API routes)
-app.mount("/", StaticFiles(directory=FRONTEND_DIR, html=True), name="static")
+# Mount static directories
+app.mount("/assets", StaticFiles(directory=FRONTEND_DIR / "dist" / "assets"), name="assets")
+
+# Include static frontend routes (instead of mounting the whole directory)
+from backend.static_routes import router as static_router
+app.include_router(static_router, include_in_schema=False)
+
 
 if __name__ == "__main__":
     import uvicorn
